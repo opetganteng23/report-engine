@@ -1,0 +1,118 @@
+# Konfigurasi pipeline klasifikasi keluhan transportasi Jakarta di X.
+# Nilai yang belum pasti = null. Path relatif terhadap folder engine/.
+
+seed: 2026
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  labeled: data/labeled
+  split: data/split
+  train: data/split/train.jsonl
+  test: data/split/test.jsonl
+  test_manual: data/split/test_manual.xlsx
+  models: models
+  predictions: outputs/predictions
+  eval: outputs/eval
+  referensi: referensi
+  logs: logs
+
+labels:
+  kategori: [Angkutan Umum, Lahan Parkir, Manajemen Lalu Lintas, Tidak Relevan]
+  sentimen: [Positif, Negatif, Netral]
+  keluhan: [Ya, Tidak]
+
+# Nama Inggris hanya untuk tabel dan grafik paper.
+label_en:
+  Angkutan Umum: Public Transport
+  Lahan Parkir: Parking
+  Manajemen Lalu Lintas: Traffic Management
+  Tidak Relevan: Not Relevant
+  # Terjemahan di bawah belum ditetapkan di instruksi - mohon dikonfirmasi
+  Positif: Positive
+  Negatif: Negative
+  Netral: Neutral
+  Ya: "Yes"
+  Tidak: "No"
+
+# Parameter per tahap diisi saat tahap tersebut dibangun.
+bulan_mulai: "2025-08"   # putaran 2, inklusif (naskah v45)
+bulan_akhir: "2026-10"   # putaran 2, inklusif (naskah v45)
+
+tahap1_acquisition:
+  seed_words: referensi/seed_words.csv
+  output: data/raw/raw_posts.jsonl
+  progress: logs/progress_tahap1.json
+  twscrape_db: logs/twscrape_accounts.db
+  # Kredensial akun X dibaca dari berkas ini (TWITTER_USERNAME, TWITTER_PASSWORD,
+  # TWITTER_EMAIL, TWITTER_EMAIL_PASSWORD, TWITTER_COOKIES), bukan dari config.
+  env_file: .env
+  query_suffix: "-filter:retweets"
+  putaran1:
+    maks_post_per_query: 150
+    seed_words:
+      - macet jakarta
+      - jaklingko
+      - angkot jakarta
+      - busway jakarta
+      - kemacetan jakarta
+      - lampu merah jakarta
+      - transjakarta
+      - lalu lintas jakarta
+      - tarif parkir jakarta
+      - to:dishubjakarta
+      - parkir liar jakarta
+      - dishub jakarta
+      - parkir jakarta
+      - rekayasa lalu lintas jakarta
+      - halte transjakarta
+      - rambu lalu lintas jakarta   # alias "rambu jakarta" (query asli putaran 1, suplemen S1)
+    # Teks query putaran 1 yang berbeda dari seed word -> seed word di seed_words.csv
+    alias:
+      rambu lalu lintas jakarta: rambu jakarta
+  putaran2:
+    maks_post_per_query: 150
+  # Query yang error diulang dengan jeda (detik, bertambah tiap percobaan); tidak ada query yang dilewati.
+  jeda_ulang_detik: [60, 300, 900, 1800, 3600]
+tahap2_preprocessing:
+  input: data/raw/raw_posts.jsonl
+  output: data/interim/clean_posts.jsonl
+  akun_resmi_media: referensi/akun_resmi_media.csv
+  kolom_akun: "username"        # nama kolom username di akun_resmi_media.csv
+  jumlah_akun_resmi_media: 37
+annot:
+  model_id: Qwen/Qwen2.5-1.5B-Instruct
+  backend: transformers
+  ollama_url: http://localhost:11434
+  max_new_tokens: 64
+  prompt: referensi/prompt_anotasi.txt
+  input: data/interim/clean_posts.jsonl
+  output: data/labeled/labeled_posts.jsonl
+  konsistensi_output: outputs/eval/konsistensi_tahap3.json
+split:
+  n1: 385             # ukuran sampel uji 1 (Slovin, e = 0,05)
+  n2: 615             # ukuran sampel uji 2
+  seed1: 2026
+  seed2: 2028
+  n_anotator: 1
+  slovin_e: 0.05
+  z: 1.96
+  input: data/labeled/labeled_posts.jsonl
+  train: data/split/train.jsonl
+  test: data/split/test.jsonl
+  test_manual: data/split/test_manual.xlsx
+  test_gold: data/split/test_gold.jsonl
+tahap5: null
+indobert:
+  model_id: indobenchmark/indobert-base-p1
+  max_length: 128
+  val_size: 0.1
+  epochs: 4
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  batch_size: 32
+  max_grad_norm: 1.0
+  n_akurasi_latih: 2000   # jumlah post latih untuk akurasi latih per epoch
+tahap7: null
+tahap8_evaluation: null

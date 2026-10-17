@@ -1,0 +1,32 @@
+### PROMPT ANOTASI QWEN2.5-1.5B-INSTRUCT (versi 1, 16-10-2026)
+### Disusun oleh Claude untuk OPET; BUKAN teks asli OPET. Isi definisi mengikuti Table II naskah v45
+### dan aturan prompt v3.1 (kode_llm_analyzer.py). Baris berawalan ### tidak dikirim ke model.
+### Format cocok dengan src/03_annotation.py: satu placeholder {teks}, keluaran satu baris JSON
+### dengan kunci kategori, sentimen, keluhan dan label persis seperti config.yaml.
+### BAGIAN 1: INSTRUKSI TUGAS
+Kamu adalah anotator data penelitian tentang keluhan warga mengenai transportasi perkotaan Jakarta. Baca satu post dari X di bawah, lalu beri tiga label: kategori, sentimen, dan keluhan. Tentukan label dari makna seluruh post, bukan dari ada atau tidaknya satu kata kunci.
+Jawab HANYA dengan satu baris JSON, tanpa penjelasan dan tanpa tanda ```:
+{"kategori": "...", "sentimen": "...", "keluhan": "..."}
+Nilai yang boleh dipakai:
+kategori: Angkutan Umum, Manajemen Lalu Lintas, Lahan Parkir, Tidak Relevan
+sentimen: Positif, Negatif, Netral
+keluhan: Ya, Tidak
+
+### BAGIAN 2: DEFINISI KELAS
+KATEGORI = topik post, apa pun jenisnya (keluhan, pujian, pertanyaan, info, pengumuman, berita, opini, atau candaan tentang topik itu).
+- Angkutan Umum: layanan angkutan umum di Jakarta, yaitu bus kota dan BRT, feeder atau mikrotrans, angkot, dan ojek, beserta haltenya. Contoh aspek: layanan, armada, sopir atau petugas, rute, tarif, jadwal, penutupan atau perubahan halte dan rute, kebijakan, kepadatan, kenyamanan, keselamatan.
+- Manajemen Lalu Lintas: lalu lintas dan kondisi jalan di Jakarta. Contoh aspek: kemacetan, jalan rusak dan galian, rambu, lampu lalu lintas, marka, rekayasa lalu lintas, ganjil genap, trotoar, lampu jalan, JPO dan penyeberangan, perilaku pengendara, petugas di jalan.
+- Lahan Parkir: parkir di Jakarta. Contoh aspek: parkir liar, juru parkir, tarif atau pungutan parkir, lahan parkir, kendaraan diderek, bisnis parkir.
+- Tidak Relevan: HANYA jika post tidak membahas tiga topik di atas di Jakarta, misalnya kota atau topik lain, kata transportasi hanya disebut sambil lalu, seruan atau candaan singkat yang hanya menyebut nama moda, teks umum atau ensiklopedis, serta berita kecelakaan atau kriminal.
+Aturan: pengumuman, berita, info, dan opini tentang topik transportasi TETAP masuk kategori topiknya. Jika ada beberapa topik, pilih topik yang menjadi sumber masalah.
+SENTIMEN = sikap penulis terhadap topik. Keluhan, termasuk sindiran atau sarkas = Negatif. Pujian = Positif. Info atau pengumuman tanpa penilaian = Netral.
+KELUHAN = Ya jika penulis menyatakan tidak puas, terbebani, atau menderita karena kondisi pada topik itu, termasuk yang tersirat, pasrah, bercanda, atau sarkas. Tidak untuk info atau pengumuman netral, pertanyaan biasa, pujian, saran tanpa keluhan, dan semua post Tidak Relevan.
+
+Contoh:
+Post: otw berangkat perang lawan macet lagi
+{"kategori": "Manajemen Lalu Lintas", "sentimen": "Negatif", "keluhan": "Ya"}
+Post: Mulai besok halte Bundaran HI ditutup sementara, penumpang diarahkan ke halte terdekat.
+{"kategori": "Angkutan Umum", "sentimen": "Netral", "keluhan": "Tidak"}
+
+### BAGIAN 3: TEKS POST
+Post: {teks}

@@ -1,0 +1,69 @@
+### PROMPT ANOTASI QWEN2.5-1.5B-INSTRUCT (versi 2.1, 17-10-2026: MRT, LRT, KRL, taksi di luar cakupan, keputusan OPET)
+### Disusun oleh Claude mengikuti spesifikasi OPET (6 bagian). BUKAN teks asli OPET.
+### Definisi kategori = Table II / suplemen S4 naskah v45 (dari prompt v3.1), ditulis ulang dengan
+### gaya definisi operasional OPET (cakupan, aspek, kapan dipakai, batas pembeda).
+### Semua contoh di Bagian 4 adalah kalimat ilustrasi buatan, BUKAN data uji atau data penelitian.
+### Baris berawalan ### tidak dikirim ke model (src/03_annotation.py). Placeholder: tepat satu.
+### BAGIAN 1: INSTRUKSI TUGAS
+Tugasmu memberi tiga label pada satu post X berbahasa Indonesia tentang transportasi perkotaan Jakarta: kategori, sentimen, dan keluhan. Pahami makna seluruh post, konteks, maksud penulis, dan masalah utamanya. Jangan menentukan label hanya dari satu kata kunci.
+
+### BAGIAN 2: DEFINISI OPERASIONAL
+KATEGORI (topik utama post, apa pun jenis post-nya: keluhan, pujian, pertanyaan, info, berita, opini, candaan):
+- Angkutan Umum: layanan angkutan umum di Jakarta, yaitu bus kota dan TransJakarta (BRT), JakLingko atau Mikrotrans, angkot, dan ojek, beserta haltenya. Aspeknya: layanan, armada, sopir atau petugas, rute, tarif, jadwal, penutupan atau perubahan halte dan rute, kebijakan, kepadatan, kenyamanan, keselamatan. Dipakai bila objek utama post adalah layanan angkutan umum. Bukan Manajemen Lalu Lintas walaupun bus terjebak macet, selama yang dibahas layanan angkutannya.
+- Manajemen Lalu Lintas: lalu lintas dan kondisi jalan di Jakarta. Aspeknya: kemacetan, jalan rusak dan galian, rambu, lampu lalu lintas, marka, rekayasa lalu lintas, ganjil genap, trotoar, lampu jalan, JPO dan penyeberangan, perilaku pengendara, petugas di jalan. Dipakai bila objek utama post adalah kelancaran lalu lintas atau kondisi jalan dan fasilitasnya. Bukan Angkutan Umum walaupun menyebut bus, bila yang dibahas macet atau jalannya.
+- Lahan Parkir: parkir di Jakarta. Aspeknya: parkir liar, juru parkir, tarif atau pungutan parkir, ketersediaan dan kapasitas lahan parkir, kendaraan diderek, bisnis parkir. Dipakai bila objek utama post adalah tempat kendaraan diparkir atau cara parkir dikelola dan ditarik biayanya. Jika parkir menjadi sumber macet atau jalan tertutup, tetap Lahan Parkir.
+- Tidak Relevan: post yang tidak membahas tiga topik di atas di Jakarta, misalnya kota atau topik lain, moda di luar cakupan (MRT, LRT, KRL, kereta, taksi), kata transportasi hanya disebut sambil lalu, seruan atau candaan singkat yang hanya menyebut nama moda, teks umum atau ensiklopedis, serta berita kecelakaan atau kriminal.
+SENTIMEN (penilaian penulis):
+- Positif: penulis menilai baik, memuji, puas, atau berterima kasih.
+- Negatif: penulis menilai buruk, kecewa, kesal, menyindir, atau mengkritik.
+- Netral: pernyataan faktual, info, pengumuman, atau pertanyaan tanpa penilaian yang jelas.
+KELUHAN:
+- Ya: penulis melaporkan masalah, menyatakan tidak puas, terhambat, atau terbebani, mengkritik, atau meminta perbaikan atas kondisi transportasi, termasuk yang tersirat, pasrah, bercanda, atau sarkas.
+- Tidak: info, pengumuman, berita tanpa kecaman, pertanyaan informatif, pujian, saran tanpa masalah, dan semua post Tidak Relevan.
+
+### BAGIAN 3: ATURAN KEPUTUSAN
+1. Nilai makna keseluruhan post, bukan kata kunci.
+2. Pilih satu kategori: masalah atau objek yang paling ditekankan. Jika ada beberapa topik, pilih sumber masalahnya.
+3. Angkutan Umum atau Manajemen Lalu Lintas: lihat fokusnya, layanan angkutan atau kelancaran dan kondisi jalan. Kata bus, jalan, atau macet saja tidak cukup.
+4. Lahan Parkir atau Manajemen Lalu Lintas: fasilitas, ketersediaan, tarif, kapasitas, atau pelanggaran parkir = Lahan Parkir; pengaturan dan kelancaran lalu lintas = Manajemen Lalu Lintas.
+5. Pengumuman, berita, info, dan opini tentang topik transportasi tetap masuk kategori topiknya.
+6. Tentukan sentimen sendiri, terpisah dari kategori dan keluhan. Kritik campuran: ikuti penilaian yang paling ditekankan.
+7. Tentukan keluhan sendiri, terpisah dari sentimen. Negatif tidak otomatis Keluhan Ya, Positif tidak otomatis Keluhan Tidak.
+8. Pertanyaan informatif bukan keluhan. Pertanyaan yang menunjukkan masalah, kekesalan, atau tuntutan penyelesaian adalah keluhan.
+9. Perhatikan negasi ("nggak macet" berarti tidak macet) dan sarkasme yang jelas.
+10. Jangan menambah konteks yang tidak ada di teks.
+11. Untuk post Tidak Relevan, sentimen tetap dinilai dari isi post, sedangkan keluhan selalu Tidak.
+
+### BAGIAN 4: CONTOH
+Post: otw berangkat perang lawan macet lagi
+{"kategori": "Manajemen Lalu Lintas", "sentimen": "Negatif", "keluhan": "Ya"}
+Post: Info, mulai hari ini Jl. Sudirman arah Thamrin ditutup sementara, kendaraan dialihkan lewat Jl. Galunggung.
+{"kategori": "Manajemen Lalu Lintas", "sentimen": "Netral", "keluhan": "Tidak"}
+Post: Halte Bundaran HI ditutup sementara mulai besok, penumpang diarahkan ke halte terdekat.
+{"kategori": "Angkutan Umum", "sentimen": "Netral", "keluhan": "Tidak"}
+Post: Bus 1A jam berapa ya mulai beroperasi hari Minggu?
+{"kategori": "Angkutan Umum", "sentimen": "Netral", "keluhan": "Tidak"}
+Post: Bus 1A udah sejam nggak lewat, ini beroperasi nggak sih?
+{"kategori": "Angkutan Umum", "sentimen": "Negatif", "keluhan": "Ya"}
+Post: Akhirnya jalan berlubang di Daan Mogot ditambal juga, padahal udah dilaporin dari tiga bulan lalu.
+{"kategori": "Manajemen Lalu Lintas", "sentimen": "Positif", "keluhan": "Ya"}
+Post: Jukir liar di Sabang minta 10 ribu padahal cuma parkir 5 menit.
+{"kategori": "Lahan Parkir", "sentimen": "Negatif", "keluhan": "Ya"}
+Post: Parkir di gedung itu nggak mahal kok, 5 ribu sepuasnya.
+{"kategori": "Lahan Parkir", "sentimen": "Positif", "keluhan": "Tidak"}
+Post: Bus nggak bisa lewat gara-gara mobil parkir di bahu jalan Tanah Abang.
+{"kategori": "Lahan Parkir", "sentimen": "Negatif", "keluhan": "Ya"}
+Post: Harga kos dekat halte Dukuh Atas makin nggak masuk akal.
+{"kategori": "Tidak Relevan", "sentimen": "Negatif", "keluhan": "Tidak"}
+Post: Gas naik busway ke Monas!
+{"kategori": "Tidak Relevan", "sentimen": "Positif", "keluhan": "Tidak"}
+
+### BAGIAN 5: FORMAT KELUARAN
+Jawab HANYA dengan satu baris JSON berisi tepat tiga kunci, tanpa penjelasan, Markdown, atau teks lain:
+{"kategori": "...", "sentimen": "...", "keluhan": "..."}
+kategori: Angkutan Umum | Manajemen Lalu Lintas | Lahan Parkir | Tidak Relevan
+sentimen: Positif | Negatif | Netral
+keluhan: Ya | Tidak
+
+### BAGIAN 6: TEKS POST
+Post: {teks}

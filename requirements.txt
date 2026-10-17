@@ -1,0 +1,12 @@
+# Python 3.11
+pyyaml
+twscrape==0.20.1
+emoji==2.16.0
+requests
+numpy
+pandas
+openpyxl
+scikit-learn
+torch
+transformers
+matplotlib

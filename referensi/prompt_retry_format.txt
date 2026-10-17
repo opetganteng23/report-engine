@@ -1,0 +1,3 @@
+### INSTRUKSI RETRY FORMAT (disusun oleh Claude, 17-10-2026). Ditempel di akhir prompt utama
+### hanya pada percobaan kedua, bila keluaran pertama tidak lolos validator. Tanpa placeholder.
+PENTING: jawab HANYA satu baris JSON dengan tiga kunci kategori, sentimen, keluhan dan nilai persis dari daftar label di atas. Jangan menulis teks lain.

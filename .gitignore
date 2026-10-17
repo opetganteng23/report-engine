@@ -1,0 +1,27 @@
+# Kredensial
+.env
+*.db
+
+# Data penelitian (post X) - tidak dikirim ke layanan lain selain X
+data/**
+!data/**/
+!data/**/.gitkeep
+
+# Model hasil pelatihan (besar)
+models/**
+!models/**/
+!models/**/.gitkeep
+
+# Prediksi berisi teks post
+outputs/predictions/**
+!outputs/predictions/.gitkeep
+
+# Log (berisi keluaran mentah model dan teks post)
+logs/**
+!logs/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

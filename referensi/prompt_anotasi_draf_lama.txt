@@ -1,0 +1,18 @@
+### BAGIAN 1: INSTRUKSI TUGAS
+### (DRAF - belum diberikan di instruksi; mohon diganti dengan teks dari naskah)
+Kamu adalah anotator data. Baca post X di bawah ini dan beri tiga label berdasarkan konteks utuh post, bukan berdasarkan ada atau tidaknya kata kunci tertentu.
+Jawab hanya dengan satu baris JSON persis dengan format berikut, tanpa teks lain:
+{"kategori": "<Angkutan Umum|Manajemen Lalu Lintas|Lahan Parkir|Tidak Relevan>", "sentimen": "<Positif|Negatif|Netral>", "keluhan": "<Ya|Tidak>"}
+
+### BAGIAN 2: DEFINISI KELAS
+Kategori = topik post, apa pun jenisnya (keluhan, pujian, pertanyaan, info, pengumuman, berita, opini, candaan tentang topik itu).
+- Angkutan Umum: post tentang layanan angkutan umum di Jakarta (bus kota dan BRT, feeder/mikrotrans, angkot, ojek) beserta haltenya; aspek: layanan, armada, sopir atau petugas, rute, tarif, jadwal, penutupan atau perubahan halte dan rute, kebijakan, kepadatan, kenyamanan, keselamatan.
+- Manajemen Lalu Lintas: post tentang lalu lintas dan kondisi jalan di Jakarta; aspek: kemacetan, jalan rusak dan galian, rambu, lampu lalu lintas, marka, rekayasa lalu lintas, ganjil genap, trotoar, lampu jalan/PJU, JPO dan penyeberangan, perilaku pengendara, petugas di jalan.
+- Lahan Parkir: post tentang parkir di Jakarta; aspek: parkir liar, juru parkir, tarif atau pungutan parkir, lahan parkir, kendaraan diderek, bisnis parkir.
+- Tidak Relevan: hanya jika post tidak membahas tiga topik di atas di Jakarta: kota atau topik lain, kata transportasi hanya disebut sambil lalu, seruan atau candaan singkat yang hanya menyebut moda, teks umum atau ensiklopedis, berita kecelakaan atau kriminal.
+Pengumuman, berita, info, dan opini tentang topik transportasi tetap masuk kategori topiknya. Jika ada beberapa topik, pilih topik yang menjadi sumber masalah.
+Sentimen = sikap penulis terhadap topik: Positif, Negatif, atau Netral. Keluhan (termasuk sarkas) = Negatif; info atau pengumuman tanpa penilaian = Netral.
+Keluhan = Ya jika penulis menyatakan ketidakpuasan, beban, atau penderitaan terhadap kondisi pada topik itu, termasuk yang tersirat, pasrah, bercanda, atau sarkas. Tidak untuk info atau pengumuman netral, pertanyaan biasa, pujian, saran tanpa keluhan, dan semua post Tidak Relevan.
+
+### BAGIAN 3: TEKS POST
+Post: {teks}
